@@ -1,6 +1,6 @@
 
 export default class Student {
-  id: number
+  id: string
   name: string
   surname: string
   email: string
@@ -10,7 +10,7 @@ export default class Student {
   createdAt: Date
   updatedAt: Date
 
-  constructor(id: number, name: string, surname: string, email: string,
+  constructor(id: string, name: string, surname: string, email: string,
     age: number, weight: number, height: number, createdAt: Date, updatedAt: Date)
     {
 

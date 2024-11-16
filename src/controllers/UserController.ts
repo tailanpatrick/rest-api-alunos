@@ -25,7 +25,7 @@ class UserController {
   async index(req: Request, res: Response) {
     try {
       const users = await UserService.list();
-      console.log(users);
+      
       return res.status(201).json(users);
     } catch (e) {
       return res.status(400).json(null);
@@ -82,7 +82,7 @@ class UserController {
       }
 
       const userExists = await UserService.find(id);
-      
+
       if (!userExists) {
         return res.status(400).json({ errors: ['Usuário não existe.'] });
       }

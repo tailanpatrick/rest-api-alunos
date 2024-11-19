@@ -34,7 +34,27 @@ export default class User {
     this.password_hash = await bcryptjs.hash(this.password, saltRounds);
   }
 
-  public async comparePassword(password: string): Promise<boolean> {
+  async comparePassword(password: string): Promise<boolean> {
     return await bcryptjs.compare(password, this.password_hash);
+  }
+
+  static fromPrisma(data: {
+    id: string;
+    name: string;
+    email: string;
+    password_hash: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }): User {
+    const user = new User({
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      password: '', // ou null
+    });
+    user.password_hash = data.password_hash;
+    user.createdAt = data.createdAt;
+    user.updatedAt = data.updatedAt;
+    return user;
   }
 }

@@ -3,66 +3,90 @@ import User from "../models/User";
 
 class UserService {
 
-  static async create(user: User){
+  static async create(userCreated: User) {
 
-    const newUser = await prismaClient.user.create({
-      data : {
-        name: user.name,
-        password_hash: user.password_hash,
-        email: user.email
+    const prismaUser = await prismaClient.user.create({
+      data: {
+        name: userCreated.name,
+        password_hash: userCreated.password_hash,
+        email: userCreated.email
       }
     });
-    
-    const {password_hash, ...userWithoutPassword } = newUser;
+
+    if (!prismaUser) {
+      return null;
+    }
+
+    const user = User.fromPrisma(prismaUser);
+
+    const { password_hash, ...userWithoutPassword } = user;
 
     return userWithoutPassword;
   }
 
-  static async list(): Promise<User[]>{
+  static async list(): Promise<User[]> {
     const users = await prismaClient.user.findMany() as User[];
-    
+
     return users;
   }
 
-  static async find(id: string ) : Promise<User | null>{
-    const user = await prismaClient.user.findUnique({
+  static async find(id: string): Promise<User | null> {
+    const prismaUser = await prismaClient.user.findUnique({
       where: {
         id
       }
-    }) as User;
-    
-    return user ;
+    });
+
+    if (!prismaUser) {
+      return null;
+    }
+
+    const user = User.fromPrisma(prismaUser);
+
+    return user;
   }
 
-  static async findByEmail(email: string ){
-    const user = await prismaClient.user.findUnique({
+  static async findByEmail(email: string) {
+    const prismaUser = await prismaClient.user.findUnique({
       where: {
         email
       }
-    }) as User;
-    
-    return user ;
+    });
+
+    if (!prismaUser) {
+      return null;
+    }
+
+    const user = User.fromPrisma(prismaUser);
+
+    return user;
   }
 
-  static async update(user: User, id: string){
+  static async update(userEdited: User, id: string) {
 
-    const newUser = await prismaClient.user.update({
-      data : {
-        name: user.name,
-        password_hash: user.password_hash,
-        email: user.email
-      }, 
-      where:{
+    const prismaUser = await prismaClient.user.update({
+      data: {
+        name: userEdited.name,
+        password_hash: userEdited.password_hash,
+        email: userEdited.email
+      },
+      where: {
         id: id
       }
-    }) as User;
-    
-    const {password_hash, ...userWithoutPassword } = newUser;
+    });
+
+    if (!prismaUser) {
+      return null;
+    }
+
+    const user = User.fromPrisma(prismaUser);
+
+    const { password_hash, ...userWithoutPassword } = user;
 
     return userWithoutPassword;
   }
 
-  static async delete(id: string ): Promise<User | null>{
+  static async delete(id: string): Promise<User | null> {
     const user = await prismaClient.user.delete({
       where: {
         id: id

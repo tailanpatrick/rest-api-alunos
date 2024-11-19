@@ -25,23 +25,38 @@ class UserController {
   async index(req: Request, res: Response) {
     try {
       const users = await UserService.list();
-      
+
       return res.status(201).json(users);
     } catch (e) {
       return res.status(400).json(null);
     }
   }
 
-  async show(req: Request, res: Response) {
+  async showById(req: Request, res: Response) {
+    const { id } = req.params; // Extrai o id dos parâmetros da rota
+
     try {
-      const { id } = req.params;
-
       const user = await UserService.find(id);
+      if (!user) {
+        return res.status(404).json({ error: ['Usuário não encontrado pelo ID.'] });
+      }
+      return res.json(user);
+    } catch (error) {
+      return res.status(500).json({ error: ['Erro ao buscar usuário.'] });
+    }
+  }
 
+  async showByEmail(req: Request, res: Response) {
+    const { email } = req.params; // Extrai o email dos parâmetros da rota
 
-      return res.status(201).json(user);
-    } catch (e) {
-      return res.status(400).json(null);
+    try {
+      const user = await UserService.findByEmail(email);
+      if (!user) {
+        return res.status(404).json({ error: ['Usuário não encontrado pelo email.'] });
+      }
+      return res.json(user);
+    } catch (error) {
+      return res.status(500).json({ error: ['Erro ao buscar usuário.'] });
     }
   }
 
@@ -90,7 +105,7 @@ class UserController {
       const user = await UserService.delete(id);
 
 
-      return res.status(201).json({ userDeleted: user});
+      return res.status(201).json({ userDeleted: user });
     } catch (e) {
       return res.status(400).json(null);
     }

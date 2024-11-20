@@ -4,11 +4,13 @@ import loginRequired from '../middlewares/loginRequired';
 
 const userRoutes: Router = Router();
 
-userRoutes.post('/', userController.create);
+//TODO: Remover essas rotas na versão final
 userRoutes.get('/', loginRequired, userController.index);
-userRoutes.get('/id/:id', userController.showById);
+userRoutes.get('/id/:userId', userController.showById);
 userRoutes.get('/email/:email', userController.showByEmail);
-userRoutes.put('/:id', userController.update);
-userRoutes.delete('/:id', userController.delete);
+
+userRoutes.post('/', userController.create);
+userRoutes.put('/', loginRequired, userController.update);
+userRoutes.delete('/', loginRequired, userController.delete);
 
 export { userRoutes };

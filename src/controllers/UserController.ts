@@ -1,5 +1,6 @@
 import { Response } from "express";
 import { RequestWithData } from "../interfaces/RequestWithData";
+import User from '../models/User'
 import UserService from "../services/UserService";
 import UserHelper from "../utils/UserHelper";
 import { Prisma } from '@prisma/client';
@@ -22,7 +23,7 @@ class UserController {
     }
   }
 
-
+  // TODO: Remover na versão final essa função e sua rota respectiva
   async index(req: RequestWithData, res: Response) {
     try {
       console.log(req.userEmail, req.userId)
@@ -35,43 +36,48 @@ class UserController {
   }
 
   async showById(req: RequestWithData, res: Response) {
-    const { id } = req.params; // Extrai o id dos parâmetros da rota
+    const { userId } = req.params;
 
     try {
-      const user = await UserService.find(id);
+      const user = await UserService.find(userId);
       if (!user) {
         return res.status(404).json({ error: ['Usuário não encontrado pelo ID.'] });
       }
-      return res.json(user);
+
+      const { id, name, email } = user;
+
+      return res.json({ id, name, email });
     } catch (error) {
       return res.status(500).json({ error: ['Erro ao buscar usuário.'] });
     }
   }
 
   async showByEmail(req: RequestWithData, res: Response) {
-    const { email } = req.params; // Extrai o email dos parâmetros da rota
+    const { email } = req.params;
 
     try {
       const user = await UserService.findByEmail(email);
       if (!user) {
         return res.status(404).json({ error: ['Usuário não encontrado pelo email.'] });
       }
-      return res.json(user);
+
+      const { name } = user as User;
+
+      return res.json({ name, email });
     } catch (error) {
       return res.status(500).json({ error: ['Erro ao buscar usuário.'] });
     }
   }
 
-
   async update(req: RequestWithData, res: Response) {
     try {
-      const { id } = req.params;
+      const userId = req.userId || '';
 
-      if (!id) {
+      if (!userId) {
         return res.status(400).json({ errors: ['Id não enviado.'] });
       }
 
-      const userExists = await UserService.find(id);
+      const userExists = await UserService.find(userId);
       if (!userExists) {
         return res.status(400).json({ errors: ['Usuário não existe.'] });
       }
@@ -83,8 +89,10 @@ class UserController {
         return res.status(400).json({ errors: validationErrors });
       }
 
-      const userUpdated = await UserService.update(user, id);
-      return res.status(201).json({ userUpdated });
+      const userUp = await UserService.update(user, userId);
+
+      return res.status(201).json({ userUpdated: { name: userUp?.name, email: userUp?.email } });
+
     } catch (e: any) {
       return UserController.handleError(e, res);
     }
@@ -92,22 +100,22 @@ class UserController {
 
   async delete(req: RequestWithData, res: Response) {
     try {
-      const { id } = req.params;
+      const userId = req.userId || '';
 
-      if (!id) {
+      if (!userId) {
         return res.status(400).json({ errors: ['Id não enviado.'] });
       }
 
-      const userExists = await UserService.find(id);
+      const userExists = await UserService.find(userId);
 
       if (!userExists) {
         return res.status(400).json({ errors: ['Usuário não existe.'] });
       }
 
-      const user = await UserService.delete(id);
+      const user = await UserService.delete(userId);
 
 
-      return res.status(201).json({ userDeleted: user });
+      return res.status(201).json({ userDeleted: { name: user?.name, email: user?.email } });
     } catch (e) {
       return res.status(400).json(null);
     }

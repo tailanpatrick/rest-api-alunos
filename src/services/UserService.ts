@@ -19,7 +19,7 @@ class UserService {
 
     const user = User.fromPrisma(prismaUser);
 
-    const { password_hash, ...userWithoutPassword } = user;
+    const {id,  password_hash, createdAt, updatedAt, ...userWithoutPassword } = user;
 
     return userWithoutPassword;
   }
@@ -42,6 +42,7 @@ class UserService {
     }
 
     const user = User.fromPrisma(prismaUser);
+    
 
     return user;
   }
@@ -81,7 +82,7 @@ class UserService {
 
     const user = User.fromPrisma(prismaUser);
 
-    const { password_hash, ...userWithoutPassword } = user;
+    const { password_hash, createdAt, updatedAt, ...userWithoutPassword } = user;
 
     return userWithoutPassword;
   }
@@ -95,6 +96,26 @@ class UserService {
 
     return user;
   }
+
+  static async checkEmailChange(id: string, email: string): Promise<User | null> {
+    const prismaUser = await prismaClient.user.findUnique({
+      where: {
+        id, email
+      }
+    });
+
+    if (!prismaUser) {
+      return null;
+    }
+
+    const user = User.fromPrisma(prismaUser);
+    
+
+    return user;
+  }
+
 }
+
+
 
 export default UserService;

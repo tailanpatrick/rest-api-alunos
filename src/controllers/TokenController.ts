@@ -28,7 +28,6 @@ class TokenController {
 
     const { id } = user;
     
-    // Verificar se o TOKEN_SECRET está definido
     const TOKEN_SECRET = process.env.TOKEN_SECRET;
     const TOKEN_EXPIRATION = process.env.TOKEN_EXPIRATION;
 
@@ -38,12 +37,11 @@ class TokenController {
       });
     }
 
-    // Gerar o token
+ 
     const token = jwt.sign({ id, email }, TOKEN_SECRET, {
       expiresIn: TOKEN_EXPIRATION
     });
 
-    // Retornar o token
     return res.json({ token });
   }
 }

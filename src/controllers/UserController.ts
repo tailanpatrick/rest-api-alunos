@@ -1,11 +1,12 @@
-import { Request, Response } from "express";
+import { Response } from "express";
+import { RequestWithData } from "../interfaces/RequestWithData";
 import UserService from "../services/UserService";
 import UserHelper from "../utils/UserHelper";
 import { Prisma } from '@prisma/client';
 
 class UserController {
 
-  async create(req: Request, res: Response) {
+  async create(req: RequestWithData, res: Response) {
     try {
       const user = await UserHelper.prepareUserData(req.body);
 
@@ -22,8 +23,9 @@ class UserController {
   }
 
 
-  async index(req: Request, res: Response) {
+  async index(req: RequestWithData, res: Response) {
     try {
+      console.log(req.userEmail, req.userId)
       const users = await UserService.list();
 
       return res.status(201).json(users);
@@ -32,7 +34,7 @@ class UserController {
     }
   }
 
-  async showById(req: Request, res: Response) {
+  async showById(req: RequestWithData, res: Response) {
     const { id } = req.params; // Extrai o id dos parâmetros da rota
 
     try {
@@ -46,7 +48,7 @@ class UserController {
     }
   }
 
-  async showByEmail(req: Request, res: Response) {
+  async showByEmail(req: RequestWithData, res: Response) {
     const { email } = req.params; // Extrai o email dos parâmetros da rota
 
     try {
@@ -61,7 +63,7 @@ class UserController {
   }
 
 
-  async update(req: Request, res: Response) {
+  async update(req: RequestWithData, res: Response) {
     try {
       const { id } = req.params;
 
@@ -88,7 +90,7 @@ class UserController {
     }
   }
 
-  async delete(req: Request, res: Response) {
+  async delete(req: RequestWithData, res: Response) {
     try {
       const { id } = req.params;
 

@@ -11,7 +11,7 @@ model Student {
   id        String   @id @default(uuid())
   name      String
   surname   String
-  email     String
+  email     String @unique
   age       Int
   weight    Float
   height    Float

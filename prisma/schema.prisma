@@ -11,10 +11,11 @@ model Student {
   id        String   @id @default(uuid())
   name      String
   surname   String
-  email     String @unique
+  email     String   @unique
   age       Int
   weight    Float
   height    Float
+  photo     Photo?   @relation
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -30,4 +31,16 @@ model User {
   updatedAt     DateTime @updatedAt
 
   @@map("users")
+}
+
+model Photo {
+  id           String   @id @default(uuid())
+  originalName String
+  fileName     String
+  student      Student  @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade) 
+  studentId    String @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("photos")
 }

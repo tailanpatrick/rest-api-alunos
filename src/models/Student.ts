@@ -1,4 +1,5 @@
 import { IsEmail, Length, IsInt, Min, Max, IsNumber } from 'class-validator';
+import Photo from './Photo';
 
 export default class Student {
   id: string;
@@ -27,6 +28,8 @@ export default class Student {
   @Max(2.5, { message: 'A altura não pode ser maior que 2.5 metros.' })
   height: number;
 
+  photo?: Photo
+
   createdAt: Date;
   updatedAt: Date;
 
@@ -39,7 +42,8 @@ export default class Student {
     weight: string | number,
     height: string | number,
     createdAt: Date,
-    updatedAt: Date
+    updatedAt: Date,
+    photo?: Photo
   ) {
     this.id = id;
     this.name = name;
@@ -50,6 +54,7 @@ export default class Student {
     this.weight = typeof weight === 'string' ? parseFloat(weight) : weight;
     this.height = typeof height === 'string' ? parseFloat(height) : height;
 
+    this.photo = photo;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }

@@ -5,20 +5,25 @@ class PhotoService {
 
     static async create(photo: Photo, studentId: string) {
 
-        const photoCreated = await prismaClient.photo.create({
-            data: {
+        const photoCreatedorUpdated = await prismaClient.photo.upsert({
+            where: {studentId},
+            create: {
                 fileName: photo.fileName,
                 originalName: photo.originalName,
-                studentId: studentId
+                studentId
+            },
+            update: {
+                fileName: photo.fileName,
+                originalName: photo.originalName
             },
         });
 
-        if (!photoCreated) {
+        if (!photoCreatedorUpdated) {
             return null;
         }
 
 
-        return photoCreated;
+        return photoCreatedorUpdated;
     }
 
 }

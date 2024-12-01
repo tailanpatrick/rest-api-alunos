@@ -67,6 +67,7 @@ class StudentController {
 
   async showByEmail(req: Request, res: Response) {
     try {
+  
       const { email } = req.params;
 
       if (!email) {

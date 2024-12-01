@@ -1,5 +1,6 @@
 import { Student } from "@prisma/client";
 import { prismaClient } from "../db/PrismaClient";
+import { StudentWithoutTimestamps } from "../models/Student";
 
 class UserService {
 
@@ -24,39 +25,77 @@ class UserService {
     return student;
   }
 
-  static async find(id: string): Promise<Student | null> {
+  static async find(id: string): Promise<StudentWithoutTimestamps | null> {
     const student = await prismaClient.student.findUnique({
       where: {
         id
-      }
+      },
+      include: {
+        photo: {
+          select: {
+            id: true,
+            fileName: true,
+            originalName: true,
+            studentId: true,
+          },
+        },
+      },
     });
 
     if (!student) {
       return null;
     }
-    
 
-    return student;
+    const { createdAt, updatedAt, ...filteredStudent } = student
+    return filteredStudent as StudentWithoutTimestamps;
   }
 
   static async findByEmail(email: string) {
     const student = await prismaClient.student.findUnique({
       where: {
         email
-      }
+      },
+      include: {
+        photo: {
+          select: {
+            id: true,
+            fileName: true,
+            originalName: true,
+            studentId: true,
+          },
+        },
+      },
     });
 
     if (!student) {
       return null;
     }
-
-    return student;
+    const { createdAt, updatedAt, ...filteredStudent } = student
+    return filteredStudent;
   }
 
-  static async list(): Promise<Student[]> {
-    const students = await prismaClient.student.findMany() as Student[];
+  static async list(): Promise<StudentWithoutTimestamps[]> {
+    const students = await prismaClient.student.findMany({
+      include: {
+        photo: {
+          select: {
+            id: true,
+            fileName: true,
+            originalName: true,
+            studentId: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
 
-    return students;
+
+    return students.map((student) => {
+      const { createdAt, updatedAt, ...filteredStudent } = student;
+      return filteredStudent;
+    }) as StudentWithoutTimestamps[];
   }
 
   static async update(studentEdited: Student, id: string) {

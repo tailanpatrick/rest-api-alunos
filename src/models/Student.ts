@@ -59,3 +59,5 @@ export default class Student {
     this.updatedAt = updatedAt;
   }
 }
+
+export type StudentWithoutTimestamps = Omit<Student, "createdAt" | "updatedAt">;

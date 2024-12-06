@@ -16,7 +16,7 @@ class TokenController {
 
     if (!user) {
       return res.status(401).json({
-        errors: ['Usuário não existe.']
+        errors: ['Email não cadastrado..']
       });
     }
 

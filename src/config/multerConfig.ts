@@ -17,7 +17,7 @@ const imageFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCall
 export default {
     storage: multer.diskStorage({
         destination: (req, file, cb) => {
-            cb(null, resolve(__dirname, '..', '..', 'uploads'))
+            cb(null, resolve(__dirname, '..', '..', 'uploads', 'images'))
         },
         filename: (req, file, cb) => {
             cb(null, `${Date.now()}_${random()}${extname(file.originalname)}`)

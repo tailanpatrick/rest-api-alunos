@@ -5,6 +5,7 @@ import { userRoutes } from "../routes/userRoutes";
 import { tokenRoutes } from '../routes/tokenRoutes';
 import { studentRoutes } from '../routes/studentRoutes';
 import { photoRoutes } from '../routes/photoRoutes';
+import { resolve} from 'path';
 
 
 class ExpressApp implements App {
@@ -14,12 +15,14 @@ class ExpressApp implements App {
     this.app = express();
     this.middlewares();
     this.routes();
+
   }
 
   middlewares(){
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.json());
-
+    this.app.use('/static/images', express.static(resolve(__dirname, '..', '..', 'uploads', 'images')));
+    
   }
 
   routes(){

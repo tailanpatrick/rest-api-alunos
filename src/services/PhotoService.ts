@@ -10,11 +10,13 @@ class PhotoService {
             create: {
                 fileName: photo.fileName,
                 originalName: photo.originalName,
-                studentId
+                studentId,
+                filePath:photo.filePath
             },
             update: {
                 fileName: photo.fileName,
-                originalName: photo.originalName
+                originalName: photo.originalName,
+                filePath: photo.filePath
             },
         });
 

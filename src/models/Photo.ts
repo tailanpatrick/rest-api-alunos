@@ -21,9 +21,11 @@ export default class Photo {
         id: string,
         originalName: string,
         fileName: string,
+        
     ) {
         this.id = id;
         this.originalName = originalName;
         this.fileName = fileName;
+
     }
 }

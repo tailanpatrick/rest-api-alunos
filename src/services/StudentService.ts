@@ -2,6 +2,7 @@ import { Student } from "@prisma/client";
 import { prismaClient } from "../db/PrismaClient";
 import { StudentWithoutTimestamps } from "../models/Student";
 import Photo from "../models/Photo";
+import appConfig from "../config/appConfig";
 
 
 class UserService {
@@ -27,9 +28,11 @@ class UserService {
     return student;
   }
 
-  static async find(id: string): Promise<StudentWithoutTimestamps | null> {
+  static async find(id: string) {
     const student = await prismaClient.student.findUnique({
-      where: { id },
+      where: {
+        id
+      },
       include: {
         photo: {
           select: {
@@ -37,24 +40,17 @@ class UserService {
             fileName: true,
             originalName: true,
             studentId: true,
+            filePath: true,
           },
         },
       },
     });
-  
-    if (!student) return null;
-  
-    const { createdAt, updatedAt, photo, ...filteredStudent } = student;
-  
-    return {
-      ...filteredStudent,
-      photo: photo ? {
-        id: photo.id,
-        fileName: photo.fileName,
-        originalName: photo.originalName,
-        filePath:`${__filename}`
-      } : undefined,
-    };
+
+    if (!student) {
+      return null;
+    }
+    const { createdAt, updatedAt, ...filteredStudent } = student
+    return filteredStudent;
   }
 
   static async findByEmail(email: string) {
@@ -69,7 +65,7 @@ class UserService {
             fileName: true,
             originalName: true,
             studentId: true,
-            filePath: true
+            filePath: true,
           },
         },
       },
@@ -102,7 +98,12 @@ class UserService {
       return {
         ...filteredStudent,
         photo: photo
-          ? new Photo(photo.id, photo.originalName, photo.fileName)
+          ? {
+              id: photo.id,
+              originalName: photo.originalName,
+              fileName: photo.fileName,
+              filePath: `${appConfig.url}/images/${photo.fileName}`,
+            }
           : undefined,
       };
     });

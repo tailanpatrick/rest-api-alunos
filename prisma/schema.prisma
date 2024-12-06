@@ -37,6 +37,7 @@ model Photo {
   id           String   @id @default(uuid())
   originalName String
   fileName     String
+  filePath     String
   student      Student  @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade) 
   studentId    String @unique
   createdAt    DateTime @default(now())

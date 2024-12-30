@@ -26,7 +26,6 @@ class UserController {
   // TODO: Remover na versão final essa função e sua rota respectiva
   async index(req: RequestWithData, res: Response) {
     try {
-      console.log(req.userEmail, req.userId)
       const users = await UserService.list();
 
       return res.status(201).json(users);

@@ -125,7 +125,7 @@ class UserController {
       if (e.code === 'P2002') {
         const fieldName:any = e.meta?.target;
         const fieldFriendlyName = fieldName.split('_')[1];
-        return res.status(400).json({ errors: [`O  ${fieldFriendlyName} já existe na base de dados. `] });
+        return res.status(400).json({ errors: [`O  ${fieldFriendlyName} já cadastrado. `] });
       }
       return res.status(400).json({ errors: [`Erro do Prisma: ${e.message}`] });
     }

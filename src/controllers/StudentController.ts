@@ -7,9 +7,9 @@ class StudentController {
   static handleError(e: any, res: Response) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === "P2002") {
-        return res.status(400).json({
-          errors: `O campo ${e.meta?.target} já existe na base de dados.`,
-        });
+        const fieldName:any = e.meta?.target;
+        const fieldFriendlyName = fieldName.split('_')[1];
+        return res.status(400).json({ errors: `O  ${fieldFriendlyName} já existe na base de dados. ` });
       }
       return res.status(400).json({ errors: `Erro do Prisma: ${e.message}` });
     }
@@ -67,7 +67,7 @@ class StudentController {
 
   async showByEmail(req: Request, res: Response) {
     try {
-  
+
       const { email } = req.params;
 
       if (!email) {

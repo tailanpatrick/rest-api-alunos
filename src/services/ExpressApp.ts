@@ -1,5 +1,7 @@
 import { App }  from '../interfaces/App';
 import express, { Application } from 'express'
+const cors = require('cors');
+
 import { homeRoutes } from "../routes/homeRoutes";
 import { userRoutes } from "../routes/userRoutes";
 import { tokenRoutes } from '../routes/tokenRoutes';
@@ -22,7 +24,11 @@ class ExpressApp implements App {
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.json());
     this.app.use('/static/images', express.static(resolve(__dirname, '..', '..', 'uploads', 'images')));
-    
+
+    this.app.use(cors({
+      origin: 'http://localhost:3001',
+    }));
+
   }
 
   routes(){
@@ -31,7 +37,7 @@ class ExpressApp implements App {
     this.app.use('/tokens/', tokenRoutes)
     this.app.use('/students/', studentRoutes)
     this.app.use('/photos/', photoRoutes)
-    
+
   }
 
 

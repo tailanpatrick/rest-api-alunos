@@ -7,7 +7,7 @@ class StudentController {
   static handleError(e: any, res: Response) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === "P2002") {
-        const fieldName:any = e.meta?.target;
+        const fieldName: any = e.meta?.target;
         const fieldFriendlyName = fieldName.split('_')[1];
         return res.status(400).json({ errors: `O  ${fieldFriendlyName} já existe na base de dados. ` });
       }

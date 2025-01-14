@@ -13,7 +13,7 @@ class UserController {
 
       const validationErrors = await UserHelper.validateUserData(user);
       if (validationErrors) {
-        return res.status(400).json({ errors: validationErrors });
+        return res.status(400).json({ errors: [ validationErrors] });
       }
 
       const newUser = await UserService.create(user);
@@ -40,14 +40,14 @@ class UserController {
     try {
       const user = await UserService.find(userId);
       if (!user) {
-        return res.status(404).json({ error: ['Usuário não encontrado pelo ID.'] });
+        return res.status(404).json({ errors: ['Usuário não encontrado pelo ID.'] });
       }
 
       const { id, name, email } = user;
 
       return res.json({ id, name, email });
     } catch (error) {
-      return res.status(500).json({ error: ['Erro ao buscar usuário.'] });
+      return res.status(500).json({ errors: ['Erro ao buscar usuário.'] });
     }
   }
 
@@ -57,14 +57,14 @@ class UserController {
     try {
       const user = await UserService.findByEmail(email);
       if (!user) {
-        return res.status(404).json({ error: ['Usuário não encontrado pelo email.'] });
+        return res.status(404).json({ errors: ['Usuário não encontrado pelo email.'] });
       }
 
       const { name } = user as User;
 
       return res.json({ name, email });
     } catch (error) {
-      return res.status(500).json({ error: ['Erro ao buscar usuário.'] });
+      return res.status(500).json({ errors: ['Erro ao buscar usuário.'] });
     }
   }
 
@@ -85,7 +85,7 @@ class UserController {
 
       const validationErrors = await UserHelper.validateUserData(user);
       if (validationErrors) {
-        return res.status(400).json({ errors: validationErrors });
+        return res.status(400).json({ errors: [validationErrors] });
       }
 
       const userUp = await UserService.update(user, userId);
@@ -125,16 +125,16 @@ class UserController {
       if (e.code === 'P2002') {
         const fieldName:any = e.meta?.target;
         const fieldFriendlyName = fieldName.split('_')[1];
-        return res.status(400).json({ errors: `O  ${fieldFriendlyName} já existe na base de dados. ` });
+        return res.status(400).json({ errors: [`O  ${fieldFriendlyName} já existe na base de dados. `] });
       }
-      return res.status(400).json({ errors: `Erro do Prisma: ${e.message}` });
+      return res.status(400).json({ errors: [`Erro do Prisma: ${e.message}`] });
     }
 
     if (e instanceof Error) {
-      return res.status(400).json({ errors: e.message });
+      return res.status(400).json({ errors: [e.message] });
     }
 
-    return res.status(500).json({ errors: "Ocorreu um erro inesperado." });
+    return res.status(500).json({ errors: ["Ocorreu um erro inesperado."] });
   }
 
 }

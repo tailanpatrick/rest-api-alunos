@@ -2,6 +2,7 @@ import { App }  from '../interfaces/App';
 import express, { Application } from 'express'
 const cors = require('cors');
 
+
 import { homeRoutes } from "../routes/homeRoutes";
 import { userRoutes } from "../routes/userRoutes";
 import { tokenRoutes } from '../routes/tokenRoutes';

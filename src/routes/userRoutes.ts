@@ -10,7 +10,7 @@ const userRoutes: Router = Router();
 // userRoutes.get('/email/:email', loginRequired, userController.showByEmail);
 
 userRoutes.post('/', userController.create);
-userRoutes.put('/', loginRequired, userController.update);
-userRoutes.delete('/', loginRequired, userController.delete);
+userRoutes.put('/:userId', loginRequired, userController.update);
+userRoutes.delete('/:userId', loginRequired, userController.delete);
 
 export { userRoutes };

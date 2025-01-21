@@ -83,10 +83,6 @@ class UserController {
 
       const user = await UserHelper.prepareUserData(req.body);
 
-      const validationErrors = await UserHelper.validateUserData(user);
-      if (validationErrors) {
-        return res.status(400).json({ errors: [validationErrors] });
-      }
 
       const userUp = await UserService.update(user, userId);
 

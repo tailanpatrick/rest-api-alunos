@@ -22,7 +22,7 @@ class UserHelper {
       password: body.password,
     });
 
-    await user.hashPassword();
+    if(user.password) await user.hashPassword();
     return user;
   }
 }

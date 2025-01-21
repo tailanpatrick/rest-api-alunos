@@ -42,7 +42,7 @@ class UserService {
     }
 
     const user = User.fromPrisma(prismaUser);
-    
+
 
     return user;
   }
@@ -68,7 +68,7 @@ class UserService {
     const prismaUser = await prismaClient.user.update({
       data: {
         name: userEdited.name,
-        password_hash: userEdited.password_hash,
+        password_hash: userEdited.password_hash ? userEdited.password_hash : undefined,
         email: userEdited.email
       },
       where: {
@@ -109,7 +109,7 @@ class UserService {
     }
 
     const user = User.fromPrisma(prismaUser);
-    
+
 
     return user;
   }

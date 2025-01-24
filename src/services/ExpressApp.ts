@@ -27,7 +27,7 @@ class ExpressApp implements App {
     this.app.use('/static/images', express.static(resolve(__dirname, '..', '..', 'uploads', 'images')));
 
     this.app.use(cors({
-      origin: 'http://localhost:3001',
+      origin: ['http://localhost:3001', 'http://192.168.100.175:3001'],
     }));
 
   }

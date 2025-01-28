@@ -26,15 +26,24 @@ class ExpressApp implements App {
     this.app.use(express.json());
     this.app.use('/static/images', express.static(resolve(__dirname, '..', '..', 'uploads', 'images')));
 
+    // Configuração completa do CORS
     this.app.use(cors({
-      origin: ['http://localhost:3001'],
+      origin: 'http://localhost:3001', // Permitir esta origem
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Métodos permitidos
+      allowedHeaders: ['Content-Type', 'Authorization'], // Cabeçalhos aceitos
+      credentials: true, // Permitir cookies/sessões (se necessário)
+    }));
+
+    // Lidar explicitamente com preflight requests
+    this.app.options('*', cors({
+      origin: 'http://localhost:3001',
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization'],
       credentials: true,
     }));
-
-    this.app.options('*', cors());
   }
+
+
 
 
   routes() {

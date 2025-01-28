@@ -3,9 +3,9 @@
 	"version": "1.0.0",
 	"main": "index.js",
 	"scripts": {
-		"dev": "nodemon --watch src -e ts --exec ts-node app.ts",
+		"dev": "nodemon --watch src -e ts --exec ts-node src/app.ts",
 		"build": "tsc",
-		"start": "node dist/index.js"
+		"start": "node dist/app.js"
 	},
 	"keywords": [],
 	"author": "",
@@ -20,7 +20,7 @@
 		"eslint": "^9.10.0",
 		"globals": "^15.9.0",
 		"nodemon": "^3.1.4",
-		"prisma": "^5.19.1",
+		"prisma": "^5.22.0",
 		"sucrase": "^3.35.0",
 		"ts-node": "^10.9.2",
 		"ts-node-dev": "^2.0.0",
@@ -28,7 +28,7 @@
 		"typescript-eslint": "^8.5.0"
 	},
 	"dependencies": {
-		"@prisma/client": "^5.19.1",
+		"@prisma/client": "^5.22.0",
 		"@types/multer": "^1.4.12",
 		"bcryptjs": "^2.4.3",
 		"class-transformer": "^0.5.1",

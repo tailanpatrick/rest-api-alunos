@@ -1,4 +1,4 @@
-import app  from "./src/services/ExpressApp";
+import app  from "./services/ExpressApp";
 
 const PORT = process.env.PORT || 3000;
 

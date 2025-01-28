@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -38,7 +38,7 @@ model Photo {
   originalName String
   fileName     String
   filePath     String
-  student      Student  @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade) 
+  student      Student  @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   studentId    String @unique
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

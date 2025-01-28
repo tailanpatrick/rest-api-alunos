@@ -27,10 +27,8 @@ class ExpressApp implements App {
     this.app.use('/static/images', express.static(resolve(__dirname, '..', '..', 'uploads', 'images')));
 
     this.app.use(cors({
-      origin: ['http://localhost:3000', 'https://seu-frontend.vercel.app', 'https://insomnia.rest'],
-      methods: ['GET', 'POST', 'PUT', 'DELETE'],
-      allowedHeaders: ['Content-Type', 'Authorization'],
-      credentials: true,
+      origin: ['http://localhost:3001']
+
     }));
 
   }

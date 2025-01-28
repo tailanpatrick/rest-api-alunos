@@ -11,17 +11,18 @@ class PhotoController {
   async create(req: Request, res: Response) {
     upload(req, res, async (err) => {
       if (err) {
+        console.error(err)
         return res.status(400).json({ errors: ["Erro ao fazer upload da foto."] });
       }
 
       try {
-        
+
         if (!req.file) {
           return res.status(400).json({ errors: ["Arquivo não encontrado no upload."] });
         }
 
-        const { originalname, filename } = req.file; 
-        const { student_id } = req.body; 
+        const { originalname, filename } = req.file;
+        const { student_id } = req.body;
 
         if (!student_id) {
           return res.status(400).json({ errors: ["student_id é obrigatório."] });
@@ -32,7 +33,7 @@ class PhotoController {
         if(!student){
           return res.status(400).json({ errors: ["Aluno não encontrado."] });
         }
-  
+
         const photo = new Photo("", originalname, filename);
 
         const photoCreated = await PhotoService.create(photo, student_id);

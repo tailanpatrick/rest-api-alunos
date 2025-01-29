@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { supabase } from '../config/supabase';
-import multer from 'multer';
-import multerConfig from '../config/multerConfig';
+import multer from "multer";
+import multerConfig from "../config/multerConfig";
 import Photo from "../models/Photo";
 import PhotoService from "../services/PhotoService";
+import StudentService from '../services/StudentService';
 
-const upload = multer(multerConfig).single('photo');
+const upload = multer(multerConfig).single("photo");
 
 class PhotoController {
   async create(req: Request, res: Response) {
@@ -26,19 +26,11 @@ class PhotoController {
         if (!student_id) {
           return res.status(400).json({ errors: ["student_id é obrigatório."] });
         }
-        const filePath = `${Date.now()}-${Math.floor(Math.random() * 10000)}.${originalname.split('.').pop()}`;
 
-        const { data, error } = await supabase.storage
-          .from('imagens')
-          .upload(filePath, buffer, {
-            contentType: mimetype,
-            cacheControl: '3600',
-            upsert: false,
-          });
+        const student = await StudentService.find(student_id);
 
-        if (error) {
-          console.error(error);
-          return res.status(500).json({ errors: ["Erro ao fazer upload da imagem para o Supabase."] });
+        if(!student){
+          return res.status(400).json({ errors: ["Aluno não encontrado."] });
         }
 
         const photo = new Photo("", originalname, filename);
@@ -51,9 +43,8 @@ class PhotoController {
 
         return res.status(201).json({
           message: "Foto enviada e salva com sucesso.",
-          photo: { signedUrl, originalname, filePath }
+          photo: photoCreated,
         });
-
       } catch (e) {
         console.error(e);
         return res.status(500).json({ errors: ["Erro ao processar a criação da foto."] });

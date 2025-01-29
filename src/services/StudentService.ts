@@ -2,6 +2,7 @@ import { Student } from "@prisma/client";
 import { prismaClient } from "../db/PrismaClient";
 import { StudentWithoutTimestamps } from "../models/Student";
 import Photo from "../models/Photo";
+import appConfig from "../config/appConfig";
 
 
 class UserService {
@@ -91,7 +92,7 @@ class UserService {
       },
       orderBy: { createdAt: 'desc' },
     });
-
+  
     return students.map(student => {
       const { createdAt, updatedAt, photo, ...filteredStudent } = student;
       return {
@@ -101,7 +102,7 @@ class UserService {
               id: photo.id,
               originalName: photo.originalName,
               fileName: photo.fileName,
-              filePath: `${photo.fileName}`,
+              filePath: `${appConfig.url}/images/${photo.fileName}`,
             }
           : undefined,
       };

@@ -24,6 +24,7 @@ class ExpressApp implements App {
   middlewares() {
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.json());
+    this.app.use('/static/images', express.static(resolve(__dirname, '..', '..', 'uploads', 'images')));
 
     // Configuração CORS
     this.app.use(cors({

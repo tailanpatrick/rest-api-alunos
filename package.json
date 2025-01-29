@@ -6,7 +6,7 @@
 		"dev": "nodemon --watch src -e ts --exec ts-node src/app.ts",
 		"build": "tsc",
 		"start": "node dist/app.js",
-    "postinstall": "prisma generate"
+		"postinstall": "prisma generate"
 	},
 	"keywords": [],
 	"author": "",
@@ -30,6 +30,7 @@
 	},
 	"dependencies": {
 		"@prisma/client": "^5.22.0",
+		"@supabase/supabase-js": "^2.48.1",
 		"@types/multer": "^1.4.12",
 		"bcryptjs": "^2.4.3",
 		"class-transformer": "^0.5.1",
@@ -38,7 +39,8 @@
 		"express": "^4.21.0",
 		"jsonwebtoken": "^9.0.2",
 		"mariadb": "^3.3.1",
-		"multer": "^1.4.5-lts.1"
+		"multer": "^1.4.5-lts.1",
+		"uuid": "^11.0.5"
 	},
 	"prisma": {
 		"seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"

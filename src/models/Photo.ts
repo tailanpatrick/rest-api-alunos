@@ -1,5 +1,4 @@
 import { IsNotEmpty } from 'class-validator';
-import appConfig from "../config/appConfig";
 
 export default class Photo {
 
@@ -12,20 +11,17 @@ export default class Photo {
     fileName: string;
 
     @IsNotEmpty()
-    get filePath(): string {
-        return `${appConfig.url}/images/${this.fileName}`
-    }
-
+    filePath: string;
 
     constructor(
         id: string,
         originalName: string,
         fileName: string,
-        
+        filePath: string,
     ) {
         this.id = id;
         this.originalName = originalName;
         this.fileName = fileName;
-
+        this.filePath = filePath;
     }
 }

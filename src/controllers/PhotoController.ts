@@ -1,50 +1,70 @@
 import { Request, Response } from "express";
-import multer from "multer";
-import multerConfig from "../config/multerConfig";
+import { supabase } from '../config/supabase';
+import multer from 'multer';
+import multerConfig from '../config/multerConfig';
 import Photo from "../models/Photo";
 import PhotoService from "../services/PhotoService";
-import StudentService from '../services/StudentService';
 
-const upload = multer(multerConfig).single("photo");
+const upload = multer(multerConfig).single('photo');
 
 class PhotoController {
   async create(req: Request, res: Response) {
     upload(req, res, async (err) => {
       if (err) {
+        console.error(err);
         return res.status(400).json({ errors: ["Erro ao fazer upload da foto."] });
       }
 
       try {
-
         if (!req.file) {
           return res.status(400).json({ errors: ["Arquivo não encontrado no upload."] });
         }
 
-        const { originalname, filename } = req.file;
+        const { originalname, buffer, mimetype } = req.file;
         const { student_id } = req.body;
 
         if (!student_id) {
           return res.status(400).json({ errors: ["student_id é obrigatório."] });
         }
+        const filePath = `${Date.now()}-${Math.floor(Math.random() * 10000)}.${originalname.split('.').pop()}`;
 
-        const student = await StudentService.find(student_id);
+        const { data, error } = await supabase.storage
+          .from('imagens')
+          .upload(filePath, buffer, {
+            contentType: mimetype,
+            cacheControl: '3600',
+            upsert: false,
+          });
 
-        if(!student){
-          return res.status(400).json({ errors: ["Aluno não encontrado."] });
+        if (error) {
+          console.error(error);
+          return res.status(500).json({ errors: ["Erro ao fazer upload da imagem para o Supabase."] });
         }
 
-        const photo = new Photo("", originalname, filename);
 
-        const photoCreated = await PhotoService.create(photo, student_id);
+        const { data: signedData, error: signedError } = await supabase.storage
+          .from('imagens')
+          .createSignedUrl(filePath, 31536000);
 
-        if (!photoCreated) {
-          return res.status(500).json({ errors: ["Erro ao criar registro da foto no banco de dados."] });
+        if (signedError) {
+          console.error(signedError);
+          return res.status(500).json({ errors: ["Erro ao gerar a URL assinada da imagem."] });
         }
+
+        if (!signedData || !signedData.signedUrl) {
+          return res.status(500).json({ errors: ["Não foi possível gerar a URL assinada da imagem."] });
+        }
+
+        const signedUrl = signedData.signedUrl;
+
+        const photo = new Photo("", originalname, signedUrl, signedUrl);
+        PhotoService.create(photo, student_id, signedUrl);
 
         return res.status(201).json({
           message: "Foto enviada e salva com sucesso.",
-          photo: photoCreated,
+          photo: { signedUrl, originalname, filePath }
         });
+
       } catch (e) {
         console.error(e);
         return res.status(500).json({ errors: ["Erro ao processar a criação da foto."] });

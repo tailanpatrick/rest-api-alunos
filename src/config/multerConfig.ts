@@ -13,7 +13,7 @@ const multerConfig = {
     if (allowedTypes.includes(file.mimetype)) {
       return cb(null, true);
     } else {
-        cb(new MulterError('LIMIT_UNEXPECTED_FILE', 'O arquivo precisa ser: JPEG, JPG, PNG ou GIF'));
+      return cb(new Error('Tipo de arquivo não permitido.'));
     }
   }
 };

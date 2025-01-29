@@ -1,27 +1,21 @@
-import multer, { FileFilterCallback, MulterError } from 'multer';
-import { extname, resolve } from 'path';
-import { Request } from 'express';
+import multer from 'multer';
 
-const random = () => Math.floor(Math.random() * 10000 * 10000)
+// Configuração do multer para armazenar os arquivos no buffer
+const storage = multer.memoryStorage(); // Usando a memória, ao invés de um diretório
 
-const imageFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallback): void => {
-    const allowedMimeTypes = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
-
-    if(allowedMimeTypes.includes(file.mimetype)){
-        cb(null, true);
+const multerConfig = {
+  storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // Limite de 5MB (ajuste conforme necessário)
+  },
+  fileFilter: (req:any, file:any, cb:any) => {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']; // Tipos permitidos
+    if (allowedTypes.includes(file.mimetype)) {
+      return cb(null, true);
     } else {
-        cb(new MulterError('LIMIT_UNEXPECTED_FILE', 'O arquivo precisa ser: JPEG, JPG, PNG ou GIF'));
+      return cb(new Error('Tipo de arquivo não permitido.'));
     }
-}
+  }
+};
 
-export default {
-    storage: multer.diskStorage({
-        destination: (req, file, cb) => {
-            cb(null, resolve(__dirname, '..', '..', 'uploads', 'images'))
-        },
-        filename: (req, file, cb) => {
-            cb(null, `${Date.now()}_${random()}${extname(file.originalname)}`)
-        }
-    }),
-    fileFilter: imageFilter
-}
+export default multerConfig;

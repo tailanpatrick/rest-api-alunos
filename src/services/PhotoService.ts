@@ -3,29 +3,28 @@ import Photo from "../models/Photo";
 
 class PhotoService {
 
-    static async create(photo: Photo, studentId: string) {
+    static async create(photo: Photo, studentId: string, signedUrl: string) {
 
-        const photoCreatedorUpdated = await prismaClient.photo.upsert({
-            where: {studentId},
+        const photoCreatedOrUpdated = await prismaClient.photo.upsert({
+            where: { studentId },
             create: {
                 fileName: photo.fileName,
                 originalName: photo.originalName,
                 studentId,
-                filePath:photo.filePath
+                filePath: signedUrl,
             },
             update: {
                 fileName: photo.fileName,
                 originalName: photo.originalName,
-                filePath: photo.filePath
+                filePath: signedUrl,
             },
         });
 
-        if (!photoCreatedorUpdated) {
+        if (!photoCreatedOrUpdated) {
             return null;
         }
 
-
-        return photoCreatedorUpdated;
+        return photoCreatedOrUpdated;
     }
 
 }

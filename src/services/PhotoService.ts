@@ -27,6 +27,14 @@ class PhotoService {
         return photoCreatedOrUpdated;
     }
 
+    static async delete(photoId: string){
+      const photoDeleted = await prismaClient.photo.delete({
+        where: { id : photoId }
+      });
+
+      return photoDeleted;
+    }
+
 }
 
 export default PhotoService;

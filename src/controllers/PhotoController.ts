@@ -71,6 +71,19 @@ class PhotoController {
       }
     });
   }
+
+  async delete(req: Request, res: Response){
+    const { photo_id } = req.params;
+
+    if(!photo_id){
+      return res.json({errors: ['Id de foto não enviado']});
+    }
+
+    const photoDeleted = await PhotoService.delete(photo_id);
+
+
+    res.json({ photoDeleted });
+  }
 }
 
 export default new PhotoController();

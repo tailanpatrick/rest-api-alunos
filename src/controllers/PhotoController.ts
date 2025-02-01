@@ -58,11 +58,11 @@ class PhotoController {
         const signedUrl = signedData.signedUrl;
 
         const photo = new Photo("", originalname, signedUrl, signedUrl);
-        PhotoService.create(photo, student_id, signedUrl);
+        const photocreated = await PhotoService.create(photo, student_id, signedUrl);
 
         return res.status(201).json({
           message: "Foto enviada e salva com sucesso.",
-          photo: { signedUrl, originalname, filePath }
+          photo: { photocreated }
         });
 
       } catch (e) {

@@ -18,6 +18,7 @@ class PhotoService {
                 originalName: photo.originalName,
                 filePath: signedUrl,
             },
+
         });
 
         if (!photoCreatedOrUpdated) {

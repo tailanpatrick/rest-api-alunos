@@ -26,21 +26,23 @@ class ExpressApp implements App {
     this.app.use(express.json());
 
     // Configuração CORS
+    const allowedOrigins = [
+      'http://localhost:3001',
+      'https://front-end-alunos.vercel.app'
+    ];
+
     this.app.use(cors({
-      origin: 'http://localhost:3001',
+      origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+          callback(null, true); // Permite a requisição
+        } else {
+          callback(new Error('Not allowed by CORS'));
+        }
+      },
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization'],
-      credentials: true, // Permitir cookies/sessões
+      credentials: true,
     }));
-
-    // Middleware para preflight
-    this.app.options('*', (req, res) => {
-      res.header('Access-Control-Allow-Origin', 'http://localhost:3001');
-      res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-      res.header('Access-Control-Allow-Credentials', 'true');
-      res.sendStatus(204); // Sem conteúdo
-    });
   }
 
 
